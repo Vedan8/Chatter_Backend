@@ -58,7 +58,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Chatter.wsgi.application'
+# WSGI_APPLICATION = 'Chatter.wsgi.application'
 ASGI_APPLICATION = "Chatter.asgi.application"
 
 
