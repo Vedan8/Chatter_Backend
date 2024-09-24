@@ -2,16 +2,17 @@ import json
 from urllib.parse import parse_qs
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+
+
 import jwt
 from Chatter.settings import SECRET_KEY
 
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    from .models import Chat, Message
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
     async def connect(self):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
         self.user = None
         self.chat_id = self.scope['url_route']['kwargs']['chat_id']
         self.chat_group_name = f'chat_{self.chat_id}'
@@ -88,10 +89,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_message(self, chat_id, content, sender):
+        from .models import Chat, Message
         chat = Chat.objects.get(id=chat_id)
         message = Message.objects.create(chat=chat, sender=sender, content=content)
         return message
 
     @database_sync_to_async
     def get_user(self, user_id):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
         return User.objects.get(id=user_id)
