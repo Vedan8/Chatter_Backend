@@ -128,10 +128,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": ["rediss://red-crp3h65ds78s73d3shjg:SI3KcJVmCV8Wc8BVCcCJImA0AvQXCVCE@singapore-redis.render.com:6379"],
+            "hosts": [f"redis://:{'TBQWaozZBxxHWiLFmuG1tmf6YySHMb5I'}@redis-15562.c305.ap-south-1-1.ec2.redns.redis-cloud.com:15562"],
         },
     },
 }
+
+
 
 LOGGING = {
     'version': 1,
@@ -161,4 +163,3 @@ CLOUDINARY_STORAGE = {
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
-
