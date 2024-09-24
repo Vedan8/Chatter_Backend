@@ -1,9 +1,10 @@
 from django.db import models
-from django.conf import settings
+# from django.conf import settings
+from core.models import User
 
 class Chat(models.Model):
     participants = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
+        User,
         related_name='chats'
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -23,7 +24,7 @@ class Message(models.Model):
         on_delete=models.CASCADE
     )
     sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         related_name='sent_messages',
         on_delete=models.CASCADE
     )
