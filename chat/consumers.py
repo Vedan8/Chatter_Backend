@@ -3,13 +3,13 @@ from urllib.parse import parse_qs
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
-from .models import Chat, Message
 import jwt
 from Chatter.settings import SECRET_KEY
 
 User = get_user_model()
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    from .models import Chat, Message
     async def connect(self):
         self.user = None
         self.chat_id = self.scope['url_route']['kwargs']['chat_id']
