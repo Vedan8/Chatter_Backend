@@ -162,3 +162,7 @@ STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
+settings.configure(
+    AUTH_USER_MODEL = 'core.User',
+)
+
