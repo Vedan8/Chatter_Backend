@@ -4,6 +4,7 @@ from .models import Posts,Comments
 from .serializers import PostSerializer,CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+import cloudinary
 
 class PostView(APIView):
     permission_classes = [IsAuthenticated]
@@ -16,6 +17,7 @@ class PostView(APIView):
             return Response(serilizer.errors)
         
     def get(self,request):
+        print("-----------------",cloudinary.config().cloud_name,"----------------")
         data=Posts.objects.all()
         serializer=PostSerializer(data,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)

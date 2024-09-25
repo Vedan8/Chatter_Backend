@@ -94,7 +94,7 @@ USE_TZ = True
 
 # Static and media files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 
 # Email backend configuration (for sending emails)
@@ -162,12 +162,16 @@ LOGGING = {
 }
 
 # Cloudinary storage configuration for static and media files
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dtfo1nvhr',
-    'API_KEY': '921286418385759',
-    'API_SECRET': 'TXTSpg5xl0m3RbkvLWvHg4frFLw',
-}
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config(
+    cloud_name='dtfo1nvhr',
+    api_key='637226244447165',
+    api_secret='JPNPuma73d9EhKM_aJ1aOd9XMlQ',
+)
 
 # Static files storage with Cloudinary
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+# STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'

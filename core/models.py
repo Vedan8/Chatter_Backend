@@ -1,7 +1,9 @@
 # core/models.py
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from cloudinary.models import CloudinaryField
+import cloudinary
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, username=None,profileImage=None, **extra_fields):
@@ -28,7 +30,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=30, unique=True, null=True, blank=True)
-    profileImage=models.ImageField(upload_to='Chatter-user-image',null=True, blank=True)
+    profileImage=CloudinaryField('image', null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
@@ -47,3 +49,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        # Upload the image to Cloudinary
+        if isinstance(self.profileImage, InMemoryUploadedFile):  # Ensure it's an in-memory file
+            upload_result = cloudinary.uploader.upload(self.profileImage)
+
+            # Get the public_id and secure_url from the Cloudinary response
+            self.profileImage = upload_result.get('secure_url') 
+
+            # Optionally, you can store the URL in a separate field if needed
+            # self.image_url = full_url
+
+        super(User, self).save(*args, **kwargs)  
