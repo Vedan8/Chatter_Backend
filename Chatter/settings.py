@@ -73,7 +73,7 @@ ASGI_APPLICATION = "Chatter.asgi.application"
 # Database configuration using dj_database_url for easier parsing
 DATABASES = {
     'default': dj_database_url.parse(
-        "postgresql://chatter_data_ekw1_user:qrLew41Zbb7VuLsv3h6IFxHLes1h7rcA@dpg-crpe49tds78s73d8qrcg-a.singapore-postgres.render.com/chatter_data_ekw1"
+        "postgresql://chatter_data_cykx_user:oAweAZnYMdFdjpux5Vy3owt2LDkQTRQe@dpg-crps8crv2p9s738b64g0-a.singapore-postgres.render.com/chatter_data_cykx"
     )
 }
 
