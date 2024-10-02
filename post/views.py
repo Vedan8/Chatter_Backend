@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Posts,Comments
+from .models import Posts,Comments,Like
 from .serializers import PostSerializer,CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -24,20 +24,40 @@ class PostView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Update likes for a specific post (PATCH method)
-    def patch(self, request, post_id):
+    def patch(self, request,post_id ):
         try:
             post = Posts.objects.get(id=post_id)
         except Posts.DoesNotExist:
             return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
-        
-        # Get the new likes count from the request data
-        likes = request.data.get('likes', None)
-        if likes is not None:
-            post.likes = likes
+
+        # Check if the user has already liked the post
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if created:
+            # User has not liked the post yet, so increment likes
+            post.likes += 1
             post.save()
-            return Response({"message": "Post updated successfully."}, status=status.HTTP_200_OK)
+            return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Likes field is required."}, status=status.HTTP_400_BAD_REQUEST)
+            # User has already liked the post
+            return Response({"error": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, post_id):
+        try:
+            post = Posts.objects.get(id=post_id)
+        except Posts.DoesNotExist:
+            return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if the user has liked the post
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            # User has liked the post, so remove the like and decrement likes
+            like.delete()
+            post.likes -= 1
+            post.save()
+            return Response({"message": "Post unliked successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except Like.DoesNotExist:
+            return Response({"error": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
         
 class CommentView(APIView):
     permission_classes = [IsAuthenticated]

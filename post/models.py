@@ -22,6 +22,13 @@ class Posts(models.Model):
 
         super(Posts, self).save(*args, **kwargs)
 
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'post')
+
 class Comments(models.Model):
     post=models.ForeignKey(Posts,on_delete=models.CASCADE)
     comment=models.TextField()
