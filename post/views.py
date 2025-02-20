@@ -18,10 +18,11 @@ class PostView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Retrieve all posts
-    def get(self, request ,post_id=None):
+    def get(self, request, post_id=None):
         data = Posts.objects.all()
-        serializer = PostSerializer(data, many=True)
+        serializer = PostSerializer(data, many=True, context={"request": request})  # Pass request
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     # Update likes for a specific post (PATCH method)
     def patch(self, request,post_id ):
@@ -61,21 +62,25 @@ class PostView(APIView):
         
 class CommentView(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self,request,post_id):
-        serializer=CommentSerializer(data=request.data)
-        post=Posts.objects.get(id=post_id)
+
+    def post(self, request, post_id):
+        post = Posts.objects.get(id=post_id)
+        # Add the current user to the request data before validation
+        request.data['user'] = request.user.id
+
+        serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(post=post)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            # Save the comment with the post and user data
+            serializer.save(post=post, user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors)
-    
-    def get(self,request,post_id):
-        data=Comments.objects.filter(post=post_id)
-        serializer=CommentSerializer(data=data,many=True)
-        if serializer.is_valid():
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, post_id):
+        comments = Comments.objects.filter(post=post_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 

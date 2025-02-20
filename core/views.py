@@ -31,7 +31,8 @@ class RegisterView(APIView):
             user = serializer.save()
             otp = str(random.randint(100000, 999999))  # Generate random OTP
             otp_dict[request.data['email']] = otp  # Store OTP temporarily
-            
+            print(otp)
+            print(otp_dict[request.data['email']])
             # Send the OTP email
             send_otp_email(request.data['email'], otp)
 
