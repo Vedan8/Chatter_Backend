@@ -71,17 +71,17 @@ TEMPLATES = [
 ASGI_APPLICATION = "Chatter.asgi.application"
 
 # Database configuration using dj_database_url for easier parsing
-# DATABASES = {
-#     'default': dj_database_url.parse(
-#         "postgresql://chatter_database_user:kzCKHRfsRZ6cUp9sfjOGC3KXHa2D95n7@dpg-curbd0bv2p9s73afq1ng-a.singapore-postgres.render.com/chatter_database"
-#     )
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
-    }
+    'default': dj_database_url.parse(
+        "postgresql://chatter_database_nz6s_user:BSMxC36mcxWpItees6APrUVJL4E5xjjX@dpg-cv222cggph6c73bbs7hg-a.singapore-postgres.render.com/chatter_database_nz6s"
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
+#     }
+# }
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
