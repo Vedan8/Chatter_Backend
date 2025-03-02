@@ -6,8 +6,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class Posts(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    postImage = CloudinaryField('image')
-    imageUrl = models.URLField(max_length=500, blank=True, null=True)
+    postImage=CloudinaryField('image', null=True, blank=True)
+    imageUrl = models.URLField(max_length=500, blank=True, null=True) 
     description = models.TextField()
     likes = models.IntegerField(default=0, blank=True)
 

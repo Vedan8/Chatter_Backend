@@ -73,7 +73,7 @@ ASGI_APPLICATION = "Chatter.asgi.application"
 # Database configuration using dj_database_url for easier parsing
 # DATABASES = {
 #     'default': dj_database_url.parse(
-#         "postgresql://chatter_data_cykx_user:oAweAZnYMdFdjpux5Vy3owt2LDkQTRQe@dpg-crps8crv2p9s738b64g0-a.singapore-postgres.render.com/chatter_data_cykx"
+#         "postgresql://chatter_database_user:kzCKHRfsRZ6cUp9sfjOGC3KXHa2D95n7@dpg-curbd0bv2p9s73afq1ng-a.singapore-postgres.render.com/chatter_database"
 #     )
 # }
 DATABASES = {
@@ -138,26 +138,30 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # Channel Layers configuration for WebSocket with Redis
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [
-#                 f"redis://:{'TBQWaozZBxxHWiLFmuG1tmf6YySHMb5I'}@redis-15562.c305.ap-south-1-1.ec2.redns.redis-cloud.com:15562"
-#             ],
-#         },
-#     },
-# }
+
+
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
             "hosts": [
-                ("127.0.0.1", 6379),  # Redis server address
+                "redis://default:Z33sQcuicSggtyO9819HBSHLivlFmSeI@redis-19798.crce182.ap-south-1-1.ec2.redns.redis-cloud.com:19798"
             ],
         },
     }
 }
+
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [
+#                 ("127.0.0.1", 6379),  # Redis server address
+#             ],
+#         },
+#     }
+# }
 
 # Logging configuration
 LOGGING = {
