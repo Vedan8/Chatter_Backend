@@ -71,17 +71,17 @@ TEMPLATES = [
 ASGI_APPLICATION = "Chatter.asgi.application"
 
 # Database configuration using dj_database_url for easier parsing
-DATABASES = {
-    'default': dj_database_url.parse(
-        "postgresql://chatter_database_nz6s_user:BSMxC36mcxWpItees6APrUVJL4E5xjjX@dpg-cv222cggph6c73bbs7hg-a.singapore-postgres.render.com/chatter_database_nz6s"
-    )
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
-#     }
+#     'default': dj_database_url.parse(
+#         "postgresql://chatter_database_nz6s_user:BSMxC36mcxWpItees6APrUVJL4E5xjjX@dpg-cv222cggph6c73bbs7hg-a.singapore-postgres.render.com/chatter_database_nz6s"
+#     )
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
+    }
+}
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -145,7 +145,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [
-                "redis://default:Z33sQcuicSggtyO9819HBSHLivlFmSeI@redis-19798.crce182.ap-south-1-1.ec2.redns.redis-cloud.com:19798"
+                "redis://default:hkqnUaxnIJS3EMeHyQ0etTGd3hHZkD5t@redis-16094.c212.ap-south-1-1.ec2.redns.redis-cloud.com:16094"
             ],
         },
     }

@@ -19,7 +19,7 @@ class UserListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return User.objects.exclude(id=self.request.user.id)
+        return User.objects.exclude(id=self.request.user.id).exclude(is_superuser=True)
 
 
 class CreateChatView(APIView):
