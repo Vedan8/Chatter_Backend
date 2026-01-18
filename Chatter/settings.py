@@ -70,18 +70,21 @@ TEMPLATES = [
 # ASGI application (since you're using Daphne/Channels)
 ASGI_APPLICATION = "Chatter.asgi.application"
 
-# Database configuration using dj_database_url for easier parsing
-# DATABASES = {
-#     'default': dj_database_url.parse(
-#         "postgresql://chatter_database_nz6s_user:BSMxC36mcxWpItees6APrUVJL4E5xjjX@dpg-cv222cggph6c73bbs7hg-a.singapore-postgres.render.com/chatter_database_nz6s"
-#     )
-# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
-    }
+    'default': dj_database_url.parse(
+        'postgresql://chatter_0ls0_user:hZiLaR1q0RHxgToilV2NqZLBKZ0BoIMp@dpg-d5mefp9r0fns73etudt0-a.singapore-postgres.render.com/chatter_0ls0',
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',  # Path to the SQLite database file
+#     }
+# }
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -159,28 +162,29 @@ CORS_ALLOWED_ORIGINS = [
 # Channel Layers configuration for WebSocket with Redis
 
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [
-#                 "redis://default:hkqnUaxnIJS3EMeHyQ0etTGd3hHZkD5t@redis-16094.c212.ap-south-1-1.ec2.redns.redis-cloud.com:16094"
-#             ],
-#         },
-#     }
-# }
-
-
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
             "hosts": [
-                ("127.0.0.1", 6379),  # Redis server address
+                "redis://default:YGLLUJgrpjei9G5AGfILo6q15th6FH7D@redis-14737.c265.us-east-1-2.ec2.cloud.redislabs.com:14737"
             ],
         },
     }
 }
+
+
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [
+#                 ("127.0.0.1", 6379),  # Redis server address
+#             ],
+#         },
+#     }
+# }
 
 # Logging configuration
 LOGGING = {
