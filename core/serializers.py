@@ -5,7 +5,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password','profileImage']
+        fields = ['email', 'username', 'password','profileImage','profileImageUrl']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -30,3 +30,5 @@ class ProfileImageUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['profileImage']
+    
+

@@ -1,5 +1,5 @@
 # core/views.py
-
+from urllib import response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -18,11 +18,37 @@ import random
 from django.conf import settings
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 import logging
+import requests
+# from google.oauth2 import id_token
+# from google.auth.transport import requests
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
 otp_dict = {}
+
+def set_jwt_cookies(response, user):
+    refresh = RefreshToken.for_user(user)
+
+    response.set_cookie(
+        key='access_token',
+        value=str(refresh.access_token),
+        httponly=True,
+        secure=True,   # True in production
+        samesite='None',
+        path='/',
+    )
+
+    response.set_cookie(
+        key='refresh_token',
+        value=str(refresh),
+        httponly=True,
+        secure=True,
+        samesite='None',
+        path='/',
+    )
+
+    return response
 
 class RegisterView(APIView):
     def post(self, request):
@@ -79,24 +105,9 @@ class LoginView(APIView):
             password = serializer.validated_data['password']
             user = User.objects.filter(email=email).first()
             if user and user.check_password(password):
-                refresh = RefreshToken.for_user(user)
-                
-                # Set the refresh token in HttpOnly cookie
-                response = Response({
-                    'access': str(refresh.access_token),
-                    'username':user.username
-                }, status=status.HTTP_200_OK)
-                
-                response.set_cookie(
-                    key='refresh_token',
-                    value=str(refresh),
-                    httponly=True,
-                    secure=False,  # Set to True in production with HTTPS
-                    samesite='Lax',  # Adjust as needed
-                    max_age=86400,  # 1 day in seconds
-                )
-                
-                return response
+                response = Response({'username': user.username})
+                return set_jwt_cookies(response, user)
+
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -201,3 +212,44 @@ class TokenRefreshView(APIView):
             return Response({'access': str(new_access)}, status=status.HTTP_200_OK)
         except TokenError:
             return Response({'error': 'Invalid refresh token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+class GoogleLoginView(APIView):
+    def post(self, request):
+        access_token = request.data.get('token')
+
+        if not access_token:
+            return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 🔐 Verify access token using Google UserInfo API
+        google_response = requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            headers={
+                'Authorization': f'Bearer {access_token}'
+            }
+        )
+
+        if google_response.status_code != 200:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user_info = google_response.json()
+        email=user_info.get('email')
+        username=user_info.get('name')
+        profileImageUrl=user_info.get('picture')
+        profileImage=user_info.get('picture')
+        serializer = UserSerializer(data={
+            'email': email,
+            'username': username,
+            'profileImageUrl': profileImageUrl,
+            'profileImage':profileImage,
+            'password': 'default_password'
+        })
+        if not User.objects.filter(email=email).exists():
+            if serializer.is_valid():
+                serializer.save()
+        user=User.objects.filter(email=email).first()
+        user.is_active = True
+        user.save()
+        response = Response({'username': user.username})
+        return set_jwt_cookies(response, user)
+
+        

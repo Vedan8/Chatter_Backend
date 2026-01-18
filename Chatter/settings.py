@@ -117,51 +117,70 @@ AUTH_USER_MODEL = 'core.User'
 # Django Rest Framework settings with JWT authentication
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'core.utils.CookieJWTAuthentication',
     ),
 }
 
+
 # Simple JWT configuration
 SIMPLE_JWT = {
+    # 🔐 Token lifetime
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    # 🔁 Refresh behavior
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+
+    # ❌ We will NOT use Authorization header
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'TOKEN_AUTHENTICATION_CLASS': 'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    # 🍪 COOKIE SETTINGS (IMPORTANT)
+    'AUTH_COOKIE': 'access_token',
+    'AUTH_COOKIE_REFRESH': 'refresh_token',
+
+    'AUTH_COOKIE_HTTP_ONLY': True,
+    'AUTH_COOKIE_SECURE': False,      # True in production (HTTPS)
+    'AUTH_COOKIE_SAMESITE': 'Lax',     # 'None' if frontend is on different domain
+    'AUTH_COOKIE_PATH': '/',
+
+    # Optional
     'TOKEN_BLACKLIST_ENABLED': True,
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 
 # Channel Layers configuration for WebSocket with Redis
 
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [
-                "redis://default:hkqnUaxnIJS3EMeHyQ0etTGd3hHZkD5t@redis-16094.c212.ap-south-1-1.ec2.redns.redis-cloud.com:16094"
-            ],
-        },
-    }
-}
-
-
 # CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
 #             "hosts": [
-#                 ("127.0.0.1", 6379),  # Redis server address
+#                 "redis://default:hkqnUaxnIJS3EMeHyQ0etTGd3hHZkD5t@redis-16094.c212.ap-south-1-1.ec2.redns.redis-cloud.com:16094"
 #             ],
 #         },
 #     }
 # }
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [
+                ("127.0.0.1", 6379),  # Redis server address
+            ],
+        },
+    }
+}
 
 # Logging configuration
 LOGGING = {

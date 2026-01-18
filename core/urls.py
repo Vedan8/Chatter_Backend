@@ -8,7 +8,8 @@ from .views import (
     LogoutView,
     UpdateUsernameView,
     TokenRefreshView,
-    UpdateProfileImageView
+    UpdateProfileImageView,
+    GoogleLoginView
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path('update-username/', UpdateUsernameView.as_view(), name='update-username'),
     path('update-profileImage/', UpdateProfileImageView.as_view(), name='update-profileImage'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('google-login/', GoogleLoginView.as_view(), name='google_login'),
 ]
