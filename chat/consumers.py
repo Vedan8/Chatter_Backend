@@ -1,7 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from django.contrib.auth.models import AnonymousUser
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -10,6 +9,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.chat_group_name = f'chat_{self.chat_id}'
         
         # Check if user is authenticated
+        from django.contrib.auth.models import AnonymousUser
         if not self.user or isinstance(self.user, AnonymousUser):
             print("Authentication error: User not authenticated")
             await self.close()
@@ -29,6 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
     
     async def disconnect(self, close_code):
+        from django.contrib.auth.models import AnonymousUser
         if self.user and not isinstance(self.user, AnonymousUser):
             await self.channel_layer.group_discard(
                 self.chat_group_name,

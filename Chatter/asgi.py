@@ -1,14 +1,17 @@
-# mysite/asgi.py
+# Chatter/asgi.py
 import os
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ProtocolTypeRouter, URLRouter
+import django
+
 from django.core.asgi import get_asgi_application
-from chat.routing import websocket_urlpatterns
+from channels.routing import ProtocolTypeRouter, URLRouter
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Chatter.settings")
-# Initialize Django ASGI application early to ensure the AppRegistry
-# is populated before importing code that may import ORM models.
 
+# 🔥 THIS IS THE MISSING LINE
+django.setup()
+
+# imports AFTER django.setup()
+from chat.routing import websocket_urlpatterns
 from chat.middleware import JwtCookieAuthMiddleware
 
 application = ProtocolTypeRouter({
