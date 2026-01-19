@@ -157,8 +157,14 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://chatter-frontend-nu.vercel.app",
-    "https://chatter-backend-jy95.onrender.com"
+    "https://chatter-backend-jy95.onrender.com",
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "https://chatter-frontend-nu.vercel.app",
+    "https://chatter-backend-jy95.onrender.com",
+]
+
 
 
 # Channel Layers configuration for WebSocket with Redis
