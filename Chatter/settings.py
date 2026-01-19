@@ -144,7 +144,7 @@ SIMPLE_JWT = {
 
     'AUTH_COOKIE_HTTP_ONLY': True,
     'AUTH_COOKIE_SECURE': False,      # True in production (HTTPS)
-    'AUTH_COOKIE_SAMESITE': 'Lax',     # 'None' if frontend is on different domain
+    'AUTH_COOKIE_SAMESITE': 'None',     # 'None' if frontend is on different domain
     'AUTH_COOKIE_PATH': '/',
 
     # Optional
